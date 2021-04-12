@@ -1,4 +1,4 @@
-import { Lin } from "./linear";
+import { Lin } from './linear';
 
 describe('Lin', () => {
   it('Lin should not be readable twice', () => {
