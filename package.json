@@ -1,0 +1,22 @@
+{
+  "name": "lttt-typescript",
+  "version": "1.0.0",
+  "description": "LTTT TypeScript Library",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aerabi/lttt-typescript.git"
+  },
+  "author": "Mohammad-Ali A'RÂBI",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/aerabi/lttt-typescript/issues"
+  },
+  "homepage": "https://github.com/aerabi/lttt-typescript#readme",
+  "devDependencies": {
+    "typescript": "^4.2.4"
+  }
+}
