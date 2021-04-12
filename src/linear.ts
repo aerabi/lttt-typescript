@@ -7,7 +7,7 @@ export class Lin<T> {
 
   read(): T {
     if (this.#value === undefined) {
-      throw Error('Cannot read the linear value twice.')
+      throw Error('Cannot read the linear value twice.');
     }
     const value: T = this.#value;
     this.#value = undefined;
