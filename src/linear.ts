@@ -14,3 +14,6 @@ export class Lin<T> {
     return value;
   }
 }
+
+export type LUnit = Lin<undefined>;
+export type LZero = Lin<void>;
