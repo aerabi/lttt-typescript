@@ -1,16 +1,18 @@
 export class Lin<T> {
-  #value: T | undefined;
+  #value: T;
+  #alreadyRead: boolean;
 
   constructor(value: T) {
     this.#value = value;
+    this.#alreadyRead = false;
   }
 
   read(): T {
-    if (this.#value === undefined) {
+    if (this.#alreadyRead) {
       throw Error('Cannot read the linear value twice.');
     }
     const value: T = this.#value;
-    this.#value = undefined;
+    this.#alreadyRead = true;
     return value;
   }
 }
