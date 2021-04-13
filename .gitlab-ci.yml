@@ -1,0 +1,5 @@
+include:
+  - template: Auto-DevOps.gitlab-ci.yml
+
+test:
+  coverage: /All\sfiles.*?\s+(\d+.\d+)/
