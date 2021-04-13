@@ -7,16 +7,24 @@ export class Single<T> {
     this.#promise = promise;
   }
 
+  static fromLinearValue<T>(value: Lin<T>): Single<T> {
+    return new Single<T>(Promise.resolve(value));
+  }
+
   static fromValue<T>(value: T): Single<T> {
-    return new Single<T>(Promise.resolve(new Lin(value)));
+    return Single.fromLinearValue(new Lin(value));
   }
 
   static fromPromise<T>(promise: Promise<T>): Single<T> {
-    return new Single(promise.then((value) => new Lin(value)));
+    return new Single(promise.then(value => new Lin(value)));
   }
 
   bind<U>(transformation: (_: T) => U): Single<U> {
-    return Single.fromPromise(this.#promise.then((a) => transformation(a.read())));
+    return Single.fromPromise(this.#promise.then(a => transformation(a.read())));
+  }
+
+  flatBind<U>(transformation: (_: T) => Single<U>): Single<U> {
+    return new Single(this.#promise.then(a => transformation(a.read()).#promise));
   }
 
   catch(onReject: (error: any) => void): Single<void> {
