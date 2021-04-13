@@ -10,5 +10,6 @@ describe('Lin', () => {
 
   it('LUnit has one value', () => {
     const unit: LUnit = new Lin(undefined);
+    expect(unit.read()).toEqual(undefined);
   });
 });
