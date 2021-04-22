@@ -19,6 +19,11 @@ describe('Single', () => {
       .exec(fail);
   });
 
+  it('exec void', done => {
+    const single = Single.fromValue(12);
+    single.bind(x => expect(x).toEqual(12)).exec(() => done());
+  });
+
   it('flatBind', done => {
     const single = Single.fromValue(12);
     single
