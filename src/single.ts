@@ -1,14 +1,17 @@
 import { Lin } from './linear';
+import { Observable, of } from 'rxjs';
+import { fromPromise } from 'rxjs/internal-compatibility';
+import { catchError, map, mergeMap, single } from 'rxjs/operators';
 
 export class Single<T> {
-  #promise: Promise<Lin<T>>;
+  #observable: Observable<Lin<T>>;
 
-  private constructor(promise: Promise<Lin<T>>) {
-    this.#promise = promise;
+  private constructor(observable: Observable<Lin<T>>) {
+    this.#observable = observable;
   }
 
   static fromLinearValue<T>(value: Lin<T>): Single<T> {
-    return new Single<T>(Promise.resolve(value));
+    return new Single<T>(of(value));
   }
 
   static fromValue<T>(value: T): Single<T> {
@@ -16,19 +19,37 @@ export class Single<T> {
   }
 
   static fromPromise<T>(promise: Promise<T>): Single<T> {
-    return new Single(promise.then(value => new Lin(value)));
+    const linearObservable = fromPromise(promise).pipe(map(val => new Lin(val)));
+    return new Single(linearObservable);
+  }
+
+  static fromObservable<T>(observable: Observable<T>): Single<T> {
+    const linearSingleObservable = observable.pipe(
+      single(),
+      map(val => new Lin(val)),
+    );
+    return new Single(linearSingleObservable);
   }
 
   bind<U>(transformation: (_: T) => U): Single<U> {
-    return Single.fromPromise(this.#promise.then(a => transformation(a.read())));
+    return Single.fromObservable(this.#observable.pipe(map(a => transformation(a.read()))));
   }
 
   flatBind<U>(transformation: (_: T) => Single<U>): Single<U> {
-    return new Single(this.#promise.then(a => transformation(a.read()).#promise));
+    return new Single(this.#observable.pipe(mergeMap(a => transformation(a.read()).#observable)));
   }
 
-  catch(onReject: (error: any) => void): Single<void> {
-    this.#promise.catch(onReject);
-    return Single.fromPromise(Promise.resolve());
+  catch(onReject: (error: any) => void): Single<T> {
+    const caught: Observable<Lin<T>> = this.#observable.pipe(
+      catchError(error => {
+        onReject(error);
+        return of<Lin<T>>();
+      }),
+    );
+    return new Single<T>(caught);
+  }
+
+  exec(consume: (_: T) => void): void {
+    this.#observable.subscribe(a => consume(a.read()));
   }
 }
