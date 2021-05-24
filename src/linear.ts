@@ -19,3 +19,5 @@ export class Lin<T> {
 
 export type LUnit = Lin<undefined>;
 export type LZero = Lin<void>;
+export type LFun<T1, T2> = Lin<(_: T1) => T2>;
+export type LPair<T1, T2> = Lin<[T1, T2]>;
