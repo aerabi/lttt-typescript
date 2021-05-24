@@ -2,8 +2,10 @@
   "name": "lttt",
   "version": "1.0.0",
   "description": "LTTT TypeScript Library",
-  "main": "index.js",
+  "main": "lib/index.js",
+  "types": "lib/index.t.ts",
   "scripts": {
+    "build": "tsc",
     "lint": "eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
     "junit": "jest --ci --reporters=default --reporters=jest-junit",
     "test": "jest --coverage"
